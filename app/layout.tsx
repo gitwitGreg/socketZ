@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-
+import SessionProvider  from '../components/SessionProvider'
 const inter = Inter({ subsets: ["latin"] });
+import { Toaster } from "@/components/ui/toaster"
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -16,7 +17,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+        <body className={inter.className}>
+          <SessionProvider>
+            <main>
+              {children}
+              <Toaster />
+            </main>
+          </SessionProvider>
+        </body>
     </html>
   );
 }
