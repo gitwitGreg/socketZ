@@ -44,4 +44,5 @@ model User {
   roomIds String[] @db.ObjectId
   rooms ChatRoom[] @relation(fields: [roomIds], references: [id])
   picture String
+  bio String
 }

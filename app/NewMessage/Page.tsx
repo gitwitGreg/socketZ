@@ -1,30 +1,36 @@
 'use client'
 import React, { useState, useEffect } from 'react'
-import { UserAccount } from '../messages/MessageComp'
+import { UserAccount } from '../ constants';
 import { Message } from '@prisma/client';
+import { Receipt } from 'lucide-react';
+import { prevGroupMessObj } from '../ constants';
+import { prevMessObj } from '../ constants';
 
-const NewMessage = ( data: {socket: any, user: UserAccount| undefined, selectedConversation: string}) => {
+const NewMessage = ( {socket, user, selectedConversation}: {socket: any, user: UserAccount| undefined, selectedConversation: string | null}) => {
   const [ message, setMessage ] = useState<string>('');
   const [ isTypeMessage, setIsTypeMessage ] = useState<boolean>(false);
-  const [recipiant, setRecipiant] = useState<string>('')
-  const [chatRoom, setChatRoom] = useState<string>('');
+  const [recipient, setRecipient] = useState<string | null>('')
+  const [chatRoom, setChatRoom] = useState<string | null>('');
 
 
   useEffect(()=> {
+    console.log('selected covo', selectedConversation);
+    setRecipient(null);
+    setChatRoom(null)
     const getMessages = async() => {
       try{
         const response = await fetch('api/getMessages', {
           method: 'POST',
-          body: JSON.stringify(data.selectedConversation)
+          body: JSON.stringify(selectedConversation)
         })
         if(response.ok){
-          const conversation: Message[] = await response.json()
-          if(conversation[0].recipient){
-            setRecipiant(conversation[0].recipient);
+          const conversation: prevGroupMessObj = await response.json()
+          if(conversation.messages[0].recipient !== null){
+            setRecipient(conversation.messages[0].recipient);
           };
-          if(conversation[0].roomId){
-            setChatRoom(conversation[0].roomId);
-            setRecipiant(conversation[0].roomId);
+          if(conversation.messages[0].roomId !== null){
+            setChatRoom(conversation.messages[0].roomId);
+            setRecipient(conversation.messages[0].recipient)
           }
         }
       }catch(error){
@@ -32,16 +38,16 @@ const NewMessage = ( data: {socket: any, user: UserAccount| undefined, selectedC
       }
     }
     getMessages();
-    data.socket.on('activeTypeMessage', (data: any) => {
+    socket.on('activeTypeMessage', () => {
       setTimeout(() => {
         handleStopTyping();
       },3000)
     })
-  },[])
+  },[selectedConversation])
 
     const handleInput = (e: any) => {
         setMessage(e.target.value)
-        data.socket.emit('activeTyping', data.user?.username);
+        socket.emit('activeTyping', user?.username);
         setIsTypeMessage(true);
        }
        const handleStopTyping = () => {
@@ -51,15 +57,16 @@ const NewMessage = ( data: {socket: any, user: UserAccount| undefined, selectedC
 
     const sendSocketEvent = async(e:any) => {
       e.preventDefault();
-      console.log(data.socket);
        const messageObj = {
-        user : data.user?.id,
+        user : user?.id,
         message: message,
-        socketId: data.socket.id,
+        socketId: socket.id,
         roomId: chatRoom,
-        recipient: recipiant,
+        recipient: recipient,
       }
-        if(message && data.socket){
+      
+      console.log('message object:', messageObj); 
+        if(message && socket){
           console.log('message obj: ',messageObj);
           try{
             const response = await fetch('api/messages', {
@@ -67,7 +74,7 @@ const NewMessage = ( data: {socket: any, user: UserAccount| undefined, selectedC
               body: JSON.stringify(messageObj)
             })
             if(response.ok){
-              data.socket.emit('messageEvent', messageObj);
+              socket.emit('messageEvent', messageObj);
             }
           }catch(error){
             console.log(error);
@@ -84,10 +91,10 @@ const NewMessage = ( data: {socket: any, user: UserAccount| undefined, selectedC
   return (
     <div className='px-6 mb-4'>
       {isTypeMessage && (
-        <p>{data.user?.username} is trying...</p>
+        <p>{user?.username} is trying...</p>
       )}
       <form 
-      className="w-full h-auto flex gap-2"
+      className="w-full h-auto flex gap-2 mb-8"
       onSubmit={sendSocketEvent}>
         <input 
         type="text" 

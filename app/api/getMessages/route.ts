@@ -1,7 +1,9 @@
+import { connectToDb } from "@/lib/mongo";
 import { PrismaClient } from "@prisma/client";
 
 export async function POST(req: any) {
     const body = await req.json();
+    await connectToDb();
     const prisma = new PrismaClient();
     try{
         const message = await prisma.message.findFirst({
@@ -48,11 +50,19 @@ export async function POST(req: any) {
 
             }
         })
+        const messObj = {
+            messages: allMessages,
+            users: [allMessages[0].recipient]
+        }
         if(allMessages){
-            return Response.json(allMessages);
+            return Response.json(messObj);
         }
     }catch(error){
         console.log(error)
         return Response.json({error: error}, {status: 400})
+    }finally{
+        if(prisma){
+            prisma.$disconnect();
+        }
     }
 }

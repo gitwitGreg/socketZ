@@ -5,6 +5,7 @@ const prisma = new PrismaClient;
 
 export const POST = async (req: any, res: any) => {
 
+    await connectToDb();
 
     try{
         
@@ -12,11 +13,10 @@ export const POST = async (req: any, res: any) => {
 
         const { email, password } = body;
 
-        console.log('credentials: ',  email, password);
+        console.log(email, password);
 
         if(!email || !password) return Response.json({error: 'Missing credentials'});
 
-        await connectToDb();
 
 
         const user = await prisma.user.findFirst({
@@ -27,23 +27,21 @@ export const POST = async (req: any, res: any) => {
 
         })
 
+        console.log('user result', user);
+
         if(!user) return Response.json({error: 'No user with existing credentials'});
 
-
-        return res(user);
-
+        return Response.json(user);
 
     }catch(error){
 
-
-        return Response.json({error: 'No user with existing credentials'});
+        console.log('catch')
+        return Response.json({error: error});
 
     }finally{
 
         await prisma.$disconnect();
 
     }
-
-
 
 }

@@ -1,8 +1,7 @@
-import { connectToDb } from "@/lib/mongo";
 import { NextAuthOptions } from "next-auth";
 import  CredentialsProvider  from "next-auth/providers/credentials";
 import { PrismaClient } from "@prisma/client";
-import { PrismaAdapter } from "@next-auth/prisma-adapter"
+import { connectToDb } from "@/lib/mongo";
 
 const prisma = new PrismaClient();
 
@@ -33,10 +32,11 @@ export const options: NextAuthOptions = {
                 if(!credentials?.password || !credentials.email) 
                 throw Error('Please enter your email and password');
 
+
                 await connectToDb();
 
                 try{
-
+                    console.log('before we find you')
                     const user = await prisma.user.findUnique({
                         where: {
 
@@ -47,6 +47,7 @@ export const options: NextAuthOptions = {
                     if(!user || !user.password) throw Error('No user with provide credentials');
 
                     const isMatch = user.password === credentials.password;
+
 
                     if(!isMatch) throw Error('invalid passowrd');
 
@@ -64,7 +65,6 @@ export const options: NextAuthOptions = {
 
     pages: {
         signIn: '/signin',
-        newUser: '/' 
     },
 
 };

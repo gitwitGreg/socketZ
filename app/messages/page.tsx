@@ -5,6 +5,7 @@ import MessageComp from "./MessageComp"
 import { useSession } from "next-auth/react";
 import { io } from "socket.io-client"
 import useGetMessage from "../hooks/useGetMessages";
+import { UserAccount } from "../ constants";
 
 export default function Page(){
     const [foundUser, setFoundUser] = useState<UserAccount>();
@@ -77,7 +78,7 @@ export default function Page(){
      return () => {
         socket.disconnect();
      };
- },[session, foundUser]);
+ },[session, foundUser, selectedConversation]);
  
 
     if(foundUser && socket.id){
@@ -87,6 +88,7 @@ export default function Page(){
        }
        socket.emit('userInfo', userObj);
    }
+
 
 
 
@@ -101,7 +103,7 @@ export default function Page(){
 
 
     return(
-        <div className="flex h-auto w-full bg-[#1e2124] text-white">
+        <div className="flex h-auto w-full bg-[#1e2124] text-white sm:h-screen overflow-y-scroll">
           <Conversations
           conversations={conversations}
           onSelectConversation={onSelectConversation}/>

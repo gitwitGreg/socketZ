@@ -3,27 +3,17 @@ import React, { useEffect, useState } from "react"
 import PreviousMessages from "../PreviousMessages/page";
 import NewMessage from "../NewMessage/Page";
 import Welcome from "../Welcome/page";
+import { UserAccount } from "../ constants";
 
-
-export interface UserAccount {
-    username:  String,
-    id:     String 
-    email:      String,
-    name:      String, 
-    password:    String,
-}
-
-
-
-export default function MessageComp(data: {socket: any, user: UserAccount| undefined, selectedConvo: string | null}){
-  const [newSelected, setNewSelected] = useState(data.selectedConvo);
+export default function MessageComp({socket, user, selectedConvo}: {socket: any, user: UserAccount| undefined, selectedConvo: string | null}){
+  const [newSelected, setNewSelected] = useState(selectedConvo);
   useEffect(() => {
-    setNewSelected(data.selectedConvo);
-  },[data.selectedConvo])
+    setNewSelected(selectedConvo);
+  },[selectedConvo])
 
 
 
-  if(!data.socket || !data.user){
+  if(!socket || !user){
     return(
       <div className="h-screen w-full">
         <span className="loading loading-spinner loading-lg"></span>
@@ -31,22 +21,25 @@ export default function MessageComp(data: {socket: any, user: UserAccount| undef
     )
   }
 
-  if(!data.selectedConvo){
+  if(!selectedConvo){
     return (
-      <Welcome />
+      <Welcome
+      user={user}/>
     )
   }
 
   return(
     <div className="flex flex-col gap-10 w-full h-auto">
-      <PreviousMessages
-      conversationId={newSelected}
-      user={data.user}
-      socket={data.socket}/>
+      <div className="h-[100%] overflow-y-scroll">
+        <PreviousMessages
+        conversationId={newSelected}
+        user={user}
+        socket={socket}/>
+      </div>
       <NewMessage
-      user={data.user}
-      socket={data.socket}
-      selectedConversation={data.selectedConvo}/>
+      user={user}
+      socket={socket}
+      selectedConversation={selectedConvo}/>
     </div>
 
     )

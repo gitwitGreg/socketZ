@@ -1,24 +1,11 @@
 'use client'
 import React, { useEffect, useState } from 'react'
 import { User } from '@prisma/client'
-import { UserAccount } from '../messages/MessageComp'
+import { UserAccount } from '../ constants'
 import Link from 'next/link'
+import { prevGroupMessObj } from '../ constants'
+import { prevMessObj } from '../ constants'
 
-
-type prevMessObj = {
-  content: string
-  createdAt: string
-  id: string
-  recipient: string
-  roomId: string | null
-  sender: UserAccount
-  senderId: string
-}
-
-type prevGroupMessObj = {
-  messages: prevMessObj[],
-  users: User[]
-}
 
 
 const PreviousMessages = ({conversationId, user, socket}: {conversationId: string | null, user: UserAccount, socket: any}) => {
@@ -27,8 +14,8 @@ const PreviousMessages = ({conversationId, user, socket}: {conversationId: strin
   const [chatRoomMessages, setchatRoomMessages] = useState<prevGroupMessObj | undefined>();
   
   useEffect(() => {
+    console.log('conversationId in prev messages: ', conversationId);
     const getMessages = async() => {
-      console.log(conversationId)
       try{
         if(!conversationId){
           return
@@ -68,7 +55,6 @@ const PreviousMessages = ({conversationId, user, socket}: {conversationId: strin
     )
   }
 
-  console.log('chat message before return', chatRoomMessages?.messages);
 
   if(chatRoomMessages?.messages && !messages){
     return(
@@ -83,7 +69,7 @@ const PreviousMessages = ({conversationId, user, socket}: {conversationId: strin
           ))}
         </div>
 
-        <div className=' ml-4 h-auto w-auto mr-8 mt-4'>
+        <div className=' ml-4 h-auto w-auto mr-8 mt-4 overflow-y-scroll'>
           {chatRoomMessages.messages.map((message, index) => (
             <div
             className={message?.senderId === user.id? 'chat chat-end' : 'chat chat-start'}

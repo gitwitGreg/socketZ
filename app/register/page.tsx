@@ -14,11 +14,11 @@ import {
     FormLabel,
     FormMessage,
   } from "@/components/ui/form"
-  import { Input } from "@/components/ui/input"
-  import { useRouter } from "next/navigation"
-  import { signIn } from "next-auth/react"
-  import logPic from '@/public/mj.jpeg'
-  import Link from "next/link"
+import { Input } from "@/components/ui/input"
+import { useRouter } from "next/navigation"
+import { signIn } from "next-auth/react"
+import ppic from '../../public/ppic.png'
+import Link from "next/link"
 
 
 export default function SignIN() {
@@ -45,6 +45,14 @@ export default function SignIN() {
         
         try {
 
+            const userCredentials = {
+                username: values.username,
+                password: values.password,
+                name: values.name,
+                email: values.email,
+                picture: String(ppic.src)
+            }
+
             const res = await fetch('api/auth/register', {
 
                 method: 'POST',
@@ -53,10 +61,10 @@ export default function SignIN() {
                     'Content-Type': 'application/json'
                 },
                 
-                body: JSON.stringify(values)
+                body: JSON.stringify(userCredentials)
             });
 
-
+            console.log('before push')
             if(res.ok) router.push('/')
             
             signIn('credentials',{

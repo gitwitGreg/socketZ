@@ -1,35 +1,35 @@
 import mongoose from 'mongoose';
-import { MongoClient, GridFSBucket } from 'mongodb';
+import { GridFSBucket } from 'mongodb';
+
+
 
 let isConnected = false;
 
 export const connectToDb = async () => {
-  if (isConnected) {
-    return;
+  if(isConnected){
+      return;
   }
-  try {
-    await mongoose.connect(process.env.DATABASE_URL as string),
-      {
-        dbName: 'database',
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-      };
-    isConnected = true;
-  } catch (error) {
-    console.log(error);
+  try{
+      await mongoose.connect(process.env.DATABASE_URL as string,{
+          dbName: 'database',
+        })
+      isConnected = true;
+  }catch(error){
+      console.log(error)
   }
-};
+}
 
-export const connectToStorage = () => {
-  const client = new MongoClient(process.env.DATABASE_URL as string);
-  try {
-    client.connect();
-    const db = client.db('4later');
-    const bucket = new GridFSBucket(db);
+export const connectToStorage = async() => {
+  try{
+    const connection = mongoose.connection;
+    console.log('connection made');
+    const bucket = new mongoose.mongo.GridFSBucket(connection.db)
+    if(!bucket){
+      console.log('Error connecting to bucket');
+    }
+    console.log('bucket made');
     return bucket
-  } catch (error) {
-    console.log(error);
-  }finally{
-    client.close();
+  }catch(error){
+    console.log(error)
   }
-};
+}

@@ -5,8 +5,6 @@ import Search from '@mui/icons-material/Search'
 import PersonIcon from '@mui/icons-material/Person';
 import Pin from '@mui/icons-material/pin';
 import { useSession } from 'next-auth/react';
-import { useToast } from './ui/use-toast';
-import { redirect } from 'next/navigation';
 import { setTimeout } from 'timers';
 
 
@@ -134,7 +132,7 @@ const NavBar = () => {
             <Link href='/saved'>
                 <Pin />
             </Link>
-            <Link href='/profile'>
+            <Link href={`/account/${user?.id}`}>
                 <PersonIcon />
             </Link>
             <div className='flex justify-between w-full h-full'>

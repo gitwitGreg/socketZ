@@ -8,23 +8,27 @@ export const POST = async (req: any, res: any) => {
     }
     const body = await req.json();
     const email = body;
+    await connectToDb();
+    const prisma = new PrismaClient();
     try{
-        await connectToDb();
-        const prisma = new PrismaClient();
-            if(email){
-                const emailType = typeof email
-                if(emailType !== 'string' ) return res.status(404).send('invalid username')
-                const userAccount = await prisma.user.findFirst({
-                    where: {
-                        email: String(email)
-                    }
-                })
-                return Response.json(userAccount);
-            }else{
-                return Response.json({error: 'session did not make it to server'})
-            }
+        if(email){
+            const emailType = typeof email
+            if(emailType !== 'string' ) return res.status(404).send('invalid username')
+            const userAccount = await prisma.user.findFirst({
+                where: {
+                    email: String(email)
+                }
+            })
+            return Response.json(userAccount);
+        }else{
+            return Response.json({error: 'session did not make it to server'})
+        }
     }catch(error){
         console.error('Error:', error);
         return Response.json({error: 'error finding in database'});
+    }finally{
+        if(prisma){
+            prisma.$disconnect();
+        }
     }
 } 

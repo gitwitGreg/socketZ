@@ -1,7 +1,8 @@
+import { connectToDb } from "@/lib/mongo";
 import { PrismaClient } from "@prisma/client";
 
 export async function POST(req: any, res: any) {
-    console.log('starting conversaiton api')
+    await connectToDb();
     const body = await req.json();
     const prisma = new PrismaClient();
     try{
@@ -15,5 +16,9 @@ export async function POST(req: any, res: any) {
     }catch(error){
         console.log(error);
         return Response.json({error: error});
+    }finally{
+        if(prisma){
+            prisma.$disconnect();
+        }
     }
 }

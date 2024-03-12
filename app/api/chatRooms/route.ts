@@ -1,6 +1,5 @@
 import { connectToDb } from "@/lib/mongo";
 import { PrismaClient } from "@prisma/client";
-import { User } from "@prisma/client";
 
 
 type roomObj = {
@@ -14,8 +13,9 @@ export async function POST(req: any, res: any) {
     console.log('body object: ', body);
     if(!body) return res.status(200).send('Internal Server Error');
     await connectToDb();
+    const prisma = new PrismaClient;
     try{
-        const prisma = new PrismaClient;
+       
         if(body.create === true){
             const existingRoom =  await prisma.chatRoom.findFirst({
                 where: {
@@ -68,5 +68,9 @@ export async function POST(req: any, res: any) {
     }catch(error){
         console.log(error);
         return Response.json({ error: 'Internal Server Error' });
+    }finally{
+        if(prisma){
+            prisma.$disconnect();
+        }
     }
 }

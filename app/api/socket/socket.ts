@@ -4,6 +4,8 @@ interface UserAccount {
     email:      string,
     name:      string, 
     password:    String,
+    picture: string,
+    bio: string,
 }
 
 interface Messageobj {

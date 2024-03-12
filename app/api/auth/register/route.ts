@@ -1,5 +1,6 @@
 import { connectToDb } from "@/lib/mongo"
 import { PrismaClient } from '@prisma/client'
+import ppic from '.././../../../public/ppic.png'
 
 const prisma = new PrismaClient()
 
@@ -8,8 +9,9 @@ export const POST = async (req: any, res: any) => {
     try{
 
         const body = await req.json();
+        console.log('body:', body);
 
-        const { email, username, password, name } = body;
+        const { email, username, password, name, picture } = body;
 
         await connectToDb();
 
@@ -33,7 +35,8 @@ export const POST = async (req: any, res: any) => {
                 password: password,
                 email: email,
                 name: name,
-                picture: '',
+                picture: picture,
+                bio: 'Edit your bio in Account settings...'
             }
         })
 

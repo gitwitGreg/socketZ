@@ -1,3 +1,4 @@
+import { connectToDb } from "@/lib/mongo";
 import { PrismaClient, User } from "@prisma/client";
 
 type messageProp  = {
@@ -10,6 +11,7 @@ type messageProp  = {
 }
 
 export async function POST(req:any, res:any) {
+    await connectToDb();
     const prisma = new PrismaClient;
     const body: messageProp = await req.json();
     if(!body) return res.status(500).send('Internal Server Error');
@@ -21,9 +23,7 @@ export async function POST(req:any, res:any) {
                         id: body.roomId
                     }
                 })
-                console.log('found chat room')
                 const roomName = chatRoom?.name
-                console.log('chatroom: ', chatRoom)
                 const newRoom = await prisma.chatRoom.upsert({
                     where: {
                         id: body.roomId as string,
@@ -69,5 +69,9 @@ export async function POST(req:any, res:any) {
     }catch(error){
         console.log(error);
         throw error
+    }finally{
+        if(prisma){
+            prisma.$disconnect();
+        }
     }
 }

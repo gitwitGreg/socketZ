@@ -1,6 +1,7 @@
 import React from 'react'
+import { UserAccount } from '../ constants'
 
-const Welcome = () => {
+const Welcome = ({user}: {user: UserAccount}) => {
   return (
     <div>
       Welcome
