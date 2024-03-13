@@ -22,12 +22,10 @@ export const connectToDb = async () => {
 export const connectToStorage = async() => {
   try{
     const connection = mongoose.connection;
-    console.log('connection made');
     const bucket = new mongoose.mongo.GridFSBucket(connection.db)
     if(!bucket){
       console.log('Error connecting to bucket');
     }
-    console.log('bucket made');
     return bucket
   }catch(error){
     console.log(error)

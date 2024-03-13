@@ -22,14 +22,13 @@ const account = () => {
   const [submitNewPicture, setSubmitNewPictue] = useState(false);
 
 
-  if(uploadedfile){
-
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      setImageSrc(reader.result)
-    }
-    reader.readAsDataURL(uploadedfile[0]);
-  }
+  // if(uploadedfile){
+  //   const reader = new FileReader();
+  //   reader.onloadend = () => {
+  //     setImageSrc(reader.result)
+  //   }
+  //   reader.readAsDataURL(uploadedfile[0]);
+  // }
 
   const changeProfilePic = async() => {
     console.log('starting cange profile pic')
@@ -59,35 +58,38 @@ const account = () => {
     }
   },[uploadedfile])
 
-  // useEffect(() => {
-  //   if(user === undefined){
-  //     return
-  //   }
-  //   const fetchProfPic = async() => {
-  //     try{
-  //       const response = await fetch('/api/getProfilePicture', {
-  //         method: 'POST',
-  //         body: JSON.stringify(user.picture),
-  //         headers: {
-  //           'Content-Type': 'image/jpeg'
-  //         }
-  //       })
-  //       if(response.ok){
-  //         const arrBuff = await response.arrayBuffer()
-  //         const blob = new Blob([arrBuff], { type: 'image/jpeg' }) ;
-  //         const url = URL.createObjectURL(blob)
-  //         console.log('res: ', url)
-  //       }
+  useEffect(() => {
+    if(user === undefined){
+      return
+    }
+    const fetchProfPic = async() => {
+      try{
+        const response = await fetch('/api/getProfilePicture', {
+          method: 'POST',
+          body: JSON.stringify({fileId: user.picture}),
+          headers: {
+            'Content-Type': 'image/jpeg'
+          }
+        })
+        if (response.ok) {
+          const fileBuffer = await response.arrayBuffer();
+          const blob = new Blob([fileBuffer], { type: 'image/jpeg' });
+  
+          const reader = new FileReader();
+          reader.onloadend = () => {
+              setImageSrc(reader.result);
+          };
+          reader.readAsDataURL(blob);
 
-  //     }catch(error){
-  //       console.log(error)
-  //     }
-  //   }
-  //   fetchProfPic()
-  // },[user])
+      }
+      }catch(error){
+        console.log(error)
+      }
+    }
+    fetchProfPic()
+  },[user])
 
 
-console.log('in account:  ' , user);
   if(!user){
     <div className="h-screen w-full flex items-center justify-center">
       <span className="loading loading-spinner loading-lg"></span>
@@ -104,18 +106,17 @@ console.log('in account:  ' , user);
           Profile
         </button>
         <div>
-
         </div>
       </div>
+
       <div className="w-full flex py-10 gap-10 flex-col px-4">
         <div className="card w-[80%] h-[40%] shadow-xl py-4 bg-black text-white">
           <figure>
-            <Image
-              src={ppic}
-              width={100}
-              height={100}
-              alt="Shoes"
-              className="text-white"
+            <img
+            src={imageSrc as string}
+            height={200}
+            width={200}
+            alt='broken'
             />
             <button 
             className="bg-purple-500 text-white p-2 rounded ml-20 mt-4"

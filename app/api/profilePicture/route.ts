@@ -24,8 +24,6 @@ export async function POST(req: NextRequest, res: NextResponse){
             chunkSizeBytes: 1048576,
         });
 
-    
-    
         if(uploadStream){
             uploadStream.write(buffer);
             const picId = uploadStream.id.toString();
