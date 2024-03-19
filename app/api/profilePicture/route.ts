@@ -6,18 +6,25 @@ import { PrismaClient } from "@prisma/client";
 export async function POST(req: NextRequest, res: NextResponse){
     await connectToDb();
     const prisma = new PrismaClient;
+
     const body = await req.formData();
-    const file: File | null = body.get('picture') as unknown as File
+
+    const file: File | null = body.get('picture') as unknown as File;
+
     const userId : string = body.get('userId') as unknown as string;
 
     try{
+
         if(!file){
             return Response.json({error: 'Missing file', status: 400});
         }
     
         const bytes = await file.arrayBuffer();
+
         const filePath = (new Date().getTime())  + '-' + file.name
+
         const buffer = Buffer.from(bytes);
+
         const bucket = await connectToStorage();
 
         const uploadStream = bucket?.openUploadStream(filePath, {
@@ -25,8 +32,10 @@ export async function POST(req: NextRequest, res: NextResponse){
         });
 
         if(uploadStream){
+
             uploadStream.write(buffer);
             const picId = uploadStream.id.toString();
+
             uploadStream.end();
 
 

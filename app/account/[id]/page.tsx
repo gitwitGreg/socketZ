@@ -25,6 +25,7 @@ const account = () => {
   // if(uploadedfile){
   //   const reader = new FileReader();
   //   reader.onloadend = () => {
+  //     console.log(reader.result);
   //     setImageSrc(reader.result)
   //   }
   //   reader.readAsDataURL(uploadedfile[0]);
@@ -34,7 +35,6 @@ const account = () => {
     console.log('starting cange profile pic')
     const form = new FormData();
     if(uploadedfile && user){
-      console.log(uploadedfile[0]);
       form.append('picture', uploadedfile[0]);
       form.append('userId', user.id);
     }
@@ -67,20 +67,34 @@ const account = () => {
         const response = await fetch('/api/getProfilePicture', {
           method: 'POST',
           body: JSON.stringify({fileId: user.picture}),
-          headers: {
-            'Content-Type': 'image/jpeg'
-          }
         })
         if (response.ok) {
-          const fileBuffer = await response.arrayBuffer();
-          const blob = new Blob([fileBuffer], { type: 'image/jpeg' });
-  
-          const reader = new FileReader();
-          reader.onloadend = () => {
-              setImageSrc(reader.result);
-          };
-          reader.readAsDataURL(blob);
+          if(response.body === null){
+            console.log('no response');
+            return;
+          }
+          const reader = response.body.getReader();
+          const chunks = [];
 
+          while (true) {
+              const { done, value } = await reader.read();
+
+              if (done) {
+                  break;
+              }
+
+              chunks.push(value);
+          }
+
+          const blob = new Blob(chunks, { type: 'image/png' });
+          const file = new File([blob], 'profile-picture.png', { type: 'image/png' });
+
+          const ourReader = new FileReader();
+          ourReader.onloadend = () => {
+              const dataURL = ourReader.result;
+              setImageSrc(dataURL);
+          };
+          ourReader.readAsDataURL(file);
       }
       }catch(error){
         console.log(error)
@@ -90,11 +104,15 @@ const account = () => {
   },[user])
 
 
+
   if(!user){
-    <div className="h-screen w-full flex items-center justify-center">
-      <span className="loading loading-spinner loading-lg"></span>
-    </div>
+    return(
+      <div className="h-screen w-full flex items-center justify-center">
+        <span className="loading loading-spinner loading-lg"></span>
+      </div>
+    )
   }
+
 
   return (
     <section className="h-screen w-full bg-[#1e2124] flex">
@@ -111,13 +129,15 @@ const account = () => {
 
       <div className="w-full flex py-10 gap-10 flex-col px-4">
         <div className="card w-[80%] h-[40%] shadow-xl py-4 bg-black text-white">
-          <figure>
-            <img
-            src={imageSrc as string}
-            height={200}
-            width={200}
-            alt='broken'
-            />
+          <figure className="mt-4">
+            {imageSrc && (
+              <img 
+              className="ml-10 rounded-xl"
+              src={imageSrc as string}
+              width={200}
+              height={200}
+              />
+            )}
             <button 
             className="bg-purple-500 text-white p-2 rounded ml-20 mt-4"
             onClick={() => setShowUpload(!showUpload)}>
