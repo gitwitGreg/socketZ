@@ -15,13 +15,10 @@ export default function useGetMessage(userId: string, socketTrigger: boolean) {
         }
     },[socketTrigger])
 
-    console.log({responseTrigger})
-
     useEffect(() => {
         const retrieveConversations = async() => {
             if(!userId) return
             try{
-                console.log('searching for convo');
                 const response = await fetch('api/conversations',{
                     method: 'POST',
                     body: JSON.stringify(userId)

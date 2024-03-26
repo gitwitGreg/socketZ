@@ -21,6 +21,7 @@ import Link from 'next/link';
 import { useState } from 'react';
 
 export default function SignIN() {
+  
   const [isLoading, setIsLoading] = useState(false);
 
   const router = useRouter();
@@ -45,13 +46,12 @@ export default function SignIN() {
         body: JSON.stringify(values),
       });
 
-      console.log(res.status);
-
       if (res.ok) {
-        console.log(await res.json());
         try{
-          console.log('push')
-             await router.push('/');
+             router.push('/');
+             setTimeout(() => {
+              router.push('/')
+             },3000)
 
         }catch(error){
             console.log(error)

@@ -1,5 +1,6 @@
 'use client';
 import useGetUser from "@/app/hooks/useGetUser";
+import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import React, { useEffect, useState } from 'react';
@@ -206,7 +207,7 @@ const account = () => {
 
   return (
     <section className="h-auto w-full bg-[#1e2124] flex">
-      <div className="flex flex-col h-auto py-4 w-60 items-center gap-2 px-4 text-white border-[#424549] border-r-4 border-y-0">
+      <div className=" hidden lg:flex lg:flex-col lg:h-auto lg:py-4 lg:w-60 lg:items-center lg:gap-2 px-4 text-white border-[#424549] lg:border-r-4 lg:border-y-0">
         <button className="w-full rounded-lg py-2 hover:bg-[#424549]">
           My Account
         </button>
@@ -328,6 +329,11 @@ const account = () => {
               </button>
             </div>
           )}
+          <Link href={'/'}>
+            <Button className="w-[50%] bg-purple-500">
+              Home
+            </Button>
+          </Link>
         </div>
       </div>
     </section>

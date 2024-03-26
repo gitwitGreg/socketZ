@@ -6,6 +6,9 @@ import PersonIcon from '@mui/icons-material/Person';
 import Pin from '@mui/icons-material/pin';
 import { useSession } from 'next-auth/react';
 import { setTimeout } from 'timers';
+import { Button } from './ui/button';
+import { signOut } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
 
 
 
@@ -19,6 +22,7 @@ const NavBar = () => {
 
   const [alertMess ,setAlertMess] = useState('');
   const session = useSession();
+  const router = useRouter();
 
 
   const getUser = async() => {
@@ -114,6 +118,17 @@ const NavBar = () => {
    }
 
 
+   const signOut = async () => {
+
+    try{
+      await signOut();
+      router.push('/signin');
+    }catch(error){
+      console.log(error)
+    }
+   }
+
+
   return (
     <div className='flex justify-between shadow px-4 py-4 bg-[#1e2124] w-full h-full'>
       <div className='flex items-center justify-cente w-[30%]'>
@@ -138,12 +153,11 @@ const NavBar = () => {
       )}
 
       <div className='flex gap-10 items-center justify-center text-white'>
-            <Link href='/search'>
-                <Search/>
-            </Link>
-            <Link href='/saved'>
-                <Pin />
-            </Link>
+            <Button 
+            className='bg-purple-600 flex gap-2'
+            onClick={signOut}>
+                <Pin /> Sign Out
+            </Button>
             <Link href={`/account/${user?.id}`}>
                 <PersonIcon />
             </Link>

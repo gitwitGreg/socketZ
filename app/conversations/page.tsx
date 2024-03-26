@@ -10,7 +10,15 @@ type Conversations = {
   roomId?: string | null
 }
 
-const Conversations = ({conversations, onSelectConversation, user, socket }: {conversations: Conversations[], onSelectConversation : any, user: UserAccount, socket: any}) => {
+
+export interface ConversationProps {
+  conversations : Conversations[],
+  onSelectConversation: any,
+  user: UserAccount,
+  socket: any,
+}
+
+export default function Conversations ({conversations, onSelectConversation, user, socket }: ConversationProps) {
 
   const [newMessUser, setNewMessUser] = useState<string>('');
   const [responseMess, setResponseMess] = useState<string>('');
@@ -73,14 +81,18 @@ const Conversations = ({conversations, onSelectConversation, user, socket }: {co
   }
 
   return (
-    <div className='h-auto w-auto'>
-      <div className='ml-4 gap-2 flex flex-col'>
+    <div className='h-auto lg:w-auto w-[10%] md:flex md:flex-col'>
+      <div className='ml-4 gap-2 lg:flex flex-col hidden'>
         <input className='h-auto bg-[#424549]' 
         onChange={(e) => setNewMessUser(e.target.value)}
         placeholder='Enter a username'/>
-        {/* Open the modal using document.getElementById('ID').showModal() method */}
         <button className="btn bg-[#424549] text-white" 
-        onClick={()=>document.getElementById('my_modal_1').showModal()}>New Message</button>
+        onClick={() => {
+          const modal = document.getElementById('my_modal_1') as HTMLDialogElement;
+          if (modal) {
+            modal.showModal();
+          }
+        }}>New Message</button>
         <dialog id="my_modal_1" className="modal">
           <div className="modal-box bg-[#1e2124] gap-4 flex flex-col">
             <h3 className="font-bold text-lg">Enter a message for the user</h3>
@@ -99,15 +111,15 @@ const Conversations = ({conversations, onSelectConversation, user, socket }: {co
           </div>
         </dialog>
       </div>
-      <div className="drawer lg:drawer-open h-screen relative">
+      <div className="lg:drawer lg:drawer-open lg:h-screen relative">
         <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
-        <div className="drawer-content flex flex-col items-center justify-center">
+        <div className="drawer-content flex flex-col items-center justify-center sm:absolute">
           <label htmlFor="my-drawer-2" className="btn btn-primary drawer-button lg:hidden">
             Open drawer
           </label>
         </div> 
-        <div className="drawer-side bg-[#424549] h-auto w-auto absolute mt-[50px] overflow-y-auto">
-          <div className="conversation-list">
+        <div className="drawer-side lg:bg-[#424549] h-auto w-auto absolute mt-[50px] overflow-y-auto overflow-x-scroll">
+          <div className="conversation-list overflow-x-scroll">
             {conversations.map((conversation, index) => (
               <div key={index} className="conversation-item">
                 <ul className="menu p-4 w-80 min-h-full bg-[#1e2124] text-white gap-1">
@@ -123,8 +135,5 @@ const Conversations = ({conversations, onSelectConversation, user, socket }: {co
         </div>
       </div>
     </div>
-  )
-  
+  ) 
 }
-
-export default Conversations

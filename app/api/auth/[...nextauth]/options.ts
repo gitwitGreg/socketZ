@@ -36,7 +36,7 @@ export const options: NextAuthOptions = {
                 await connectToDb();
 
                 try{
-                    console.log('before we find you')
+                    
                     const user = await prisma.user.findUnique({
                         where: {
 

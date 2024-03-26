@@ -29,7 +29,7 @@ export default function MessageComp({socket, user, selectedConvo}: {socket: any,
   }
 
   return(
-    <div className="flex flex-col gap-10 w-full h-auto">
+    <div className="flex flex-col gap-10 w-full h-screen">
       <div className="h-[100%] overflow-y-scroll">
         <PreviousMessages
         conversationId={newSelected}

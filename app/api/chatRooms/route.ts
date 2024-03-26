@@ -31,7 +31,7 @@ export async function POST(req: any, res: any) {
                 })
                 await prisma.message.create({
                     data: {
-                        content: 'Hi, Welcome to my ChatRoom!',
+                        content: 'You have succesfully created a room',
                         senderId: body.userId,
                         recipient: body.roomName,
                         roomId: newRoom.id
