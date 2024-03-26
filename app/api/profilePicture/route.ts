@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { connectToDb, connectToStorage } from "@/lib/mongo";
 import { PrismaClient } from "@prisma/client";
+import { ObjectId } from "mongodb";
 
 
 export async function POST(req: NextRequest, res: NextResponse){
@@ -37,6 +38,17 @@ export async function POST(req: NextRequest, res: NextResponse){
             const picId = uploadStream.id.toString();
 
             uploadStream.end();
+
+            const user = await prisma.user.findFirst({
+                where: {
+                    id: userId
+                }
+            })
+
+            const oldProfilePic = user?.picture;
+            const objId = new ObjectId(oldProfilePic);
+
+            await bucket?.delete(objId);
 
 
             await prisma.user.update({

@@ -32,5 +32,14 @@ export type prevMessObj = {
 export type prevGroupMessObj = {
     messages: prevMessObj[],
     users: User[]
- }
+}
+
+export type ConversationMessages = {
+    id: string;
+    content: string;
+    senderId: string;
+    recipient: string;
+    roomId: string | null;
+    createdAt: Date;
+}
   

@@ -4,14 +4,14 @@ import Page from "./messages/page";
 export default function Home() {
 
   return (
-    <>
+    <section className="flex flex-col h-auto">
     <nav>
       <NavBar />
     </nav>
     <main>
       <Page />
     </main>
-    </>
+    </section>
   );
 }
 

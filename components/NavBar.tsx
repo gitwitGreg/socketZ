@@ -10,11 +10,16 @@ import { setTimeout } from 'timers';
 
 
 const NavBar = () => {
+
   const [ user, setUser ] = useState<UserAccount>()
   const [ room, setRoom ] = useState('');
+
   const [newRoom, setNewRoom] = useState('')
   const [ showAlert, setShowAlert ] = useState(false);
+
+  const [alertMess ,setAlertMess] = useState('');
   const session = useSession();
+
 
   const getUser = async() => {
     if(session.status === 'authenticated'){
@@ -38,6 +43,7 @@ const NavBar = () => {
       }
     }
   }
+
   useEffect(() => {
     getUser();
   },[session])
@@ -59,11 +65,12 @@ const NavBar = () => {
           body: JSON.stringify(roomRequestInfo)
       })
       if(response.ok){
-          setShowAlert(true);
-          setTimeout(() => {
-            setShowAlert(false);
-          },3000)
-          setRoom('');
+        setAlertMess('Room succesfully joined');
+        setShowAlert(true);
+        setTimeout(() => {
+          setShowAlert(false);
+        },3000)
+        setRoom('');
       }else{
         console.log('error joining room');
       }
@@ -85,6 +92,7 @@ const NavBar = () => {
     })
     if(response.ok){
       setNewRoom('');
+      setAlertMess('Room successfully created');
       setShowAlert(true);
       setTimeout(() => {
         setShowAlert(false);
@@ -107,7 +115,6 @@ const NavBar = () => {
 
 
   return (
-
     <div className='flex justify-between shadow px-4 py-4 bg-[#1e2124] w-full h-full'>
       <div className='flex items-center justify-cente w-[30%]'>
           <input 
@@ -120,8 +127,13 @@ const NavBar = () => {
       </div>
       {showAlert && (
         <div role="alert" className="alert alert-success w-[60%] mr-40">
-        <svg xmlns="http://www.w3.org/2000/svg" className="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-        <span>Your purchase has been confirmed!</span>
+        <svg xmlns="http://www.w3.org/2000/svg" 
+        className="stroke-current shrink-0 h-6 w-6" fill="none" 
+        viewBox="0 0 24 24"><path strokeLinecap="round" 
+        strokeLinejoin="round" 
+        strokeWidth="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+        <span>{alertMess}</span>
       </div>
       )}
 
@@ -146,7 +158,6 @@ const NavBar = () => {
             </div>
         </div>
     </div>
-
   )
   
 }

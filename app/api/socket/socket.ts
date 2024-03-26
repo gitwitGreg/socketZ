@@ -60,4 +60,10 @@ io.on('connection', (socket: any) => {
         console.log(data);
         io.emit('ReTest', 'You Made It')
     })
+
+    socket.on('initialMess', ()=> {
+        console.log('made it to socket')
+        io.emit('successInitialMess', 'New message succesfully sent')
+    })
+
 })

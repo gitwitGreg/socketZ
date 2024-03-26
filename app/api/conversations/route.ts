@@ -2,9 +2,11 @@ import { connectToDb } from "@/lib/mongo";
 import { Message, PrismaClient } from "@prisma/client";
 
 export async function POST(req:any, res: any){
+
     const body = await req.json();
     await connectToDb();
     const prisma = new PrismaClient;
+    
     try{
         const conversations = await prisma.message.findMany({
             where:{

@@ -11,10 +11,13 @@ type messageProp  = {
 }
 
 export async function POST(req:any, res:any) {
+
     await connectToDb();
     const prisma = new PrismaClient;
+
     const body: messageProp = await req.json();
     if(!body) return res.status(500).send('Internal Server Error');
+    
     try{
         if(body){
             if(body.roomId){

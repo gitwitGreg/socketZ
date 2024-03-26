@@ -1,10 +1,10 @@
 'use client'
 import React, { useEffect, useState } from 'react'
-import { User } from '@prisma/client'
 import { UserAccount } from '../ constants'
 import Link from 'next/link'
 import { prevGroupMessObj } from '../ constants'
 import { prevMessObj } from '../ constants'
+import getTimeAgo from '@/components/timeConvertion'
 
 
 
@@ -14,7 +14,6 @@ const PreviousMessages = ({conversationId, user, socket}: {conversationId: strin
   const [chatRoomMessages, setchatRoomMessages] = useState<prevGroupMessObj | undefined>();
   
   useEffect(() => {
-    console.log('conversationId in prev messages: ', conversationId);
     const getMessages = async() => {
       try{
         if(!conversationId){
@@ -75,19 +74,15 @@ const PreviousMessages = ({conversationId, user, socket}: {conversationId: strin
             className={message?.senderId === user.id? 'chat chat-end' : 'chat chat-start'}
             key={index}>
               <div className="w-10 rounded-full">
-                <img 
-                alt="Tailwind CSS chat bubble component" 
-                src="https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />
               </div>
               <div className="chat-header">
                 {message.sender.username}
-                <time className="text-xs opacity-50">12:45</time>
               </div>
               <div className="chat-bubble overflow-hidden">
                 {message.content}
               </div>
               <div className="chat-footer opacity-50">
-                Delivered
+                <time className="text-xs opacity-50">{getTimeAgo(message.createdAt)}</time>
               </div>
             </div>
           ))}
@@ -104,9 +99,6 @@ const PreviousMessages = ({conversationId, user, socket}: {conversationId: strin
         key={index}>
           <div>
           <div className="w-10 rounded-full">
-            <img 
-            alt="Tailwind CSS chat bubble component" 
-            src="https://daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />
           </div>
         </div>
         <div className="chat-header">

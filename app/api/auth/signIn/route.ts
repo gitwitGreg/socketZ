@@ -13,7 +13,6 @@ export const POST = async (req: any, res: any) => {
 
         const { email, password } = body;
 
-        console.log(email, password);
 
         if(!email || !password) return Response.json({error: 'Missing credentials'});
 
@@ -27,7 +26,6 @@ export const POST = async (req: any, res: any) => {
 
         })
 
-        console.log('user result', user);
 
         if(!user) return Response.json({error: 'No user with existing credentials'});
 
@@ -35,7 +33,6 @@ export const POST = async (req: any, res: any) => {
 
     }catch(error){
 
-        console.log('catch')
         return Response.json({error: error});
 
     }finally{

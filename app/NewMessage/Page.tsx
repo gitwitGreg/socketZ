@@ -14,7 +14,6 @@ const NewMessage = ( {socket, user, selectedConversation}: {socket: any, user: U
 
 
   useEffect(()=> {
-    console.log('selected covo', selectedConversation);
     setRecipient(null);
     setChatRoom(null)
     const getMessages = async() => {
@@ -104,7 +103,7 @@ const NewMessage = ( {socket, user, selectedConversation}: {socket: any, user: U
         onChange={handleInput}
         />
         <button 
-        className="bg-[#424549] rounded w-[10%] text-white"
+        className="bg-[#424549] rounded lg:w-[10%] text-white"
         type="submit">
           Send
         </button>

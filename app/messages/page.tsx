@@ -8,11 +8,17 @@ import useGetMessage from "../hooks/useGetMessages";
 import { UserAccount } from "../ constants";
 
 export default function Page(){
+
     const [foundUser, setFoundUser] = useState<UserAccount>();
-    const {conversations} = useGetMessage(foundUser?.id as string)
+
+    const [trigger, setTrigger] = useState(false);
+
+    const {conversations, responseTrigger} = useGetMessage(foundUser?.id as string, trigger);
+   
     const [selectedConversation, setSelectedConversation] = useState<string | null>(null);
   
     const session = useSession();
+
 
     const onSelectConversation = (conversationId: string) => {
       if(!conversationId) return;
@@ -79,6 +85,21 @@ export default function Page(){
         socket.disconnect();
      };
  },[session, foundUser, selectedConversation]);
+
+
+ useEffect(() => {
+  try{
+    socket.on('successInitialMess', () => {
+      console.log('recived from socket');
+      setTrigger(true);
+    })
+    setTimeout(() => {
+      setTrigger(false);
+    },4000)
+  }catch(error){
+    console.log(error)
+  }
+ },[socket]);
  
 
     if(foundUser && socket.id){
@@ -90,8 +111,6 @@ export default function Page(){
    }
 
 
-
-
    if(!foundUser || !socket|| !socket.connected){
     return(
       <div className="h-screen w-full flex items-center justify-center">
@@ -101,12 +120,14 @@ export default function Page(){
    }
 
 
-
     return(
         <div className="flex h-auto w-full bg-[#1e2124] text-white sm:h-screen overflow-y-scroll">
           <Conversations
           conversations={conversations}
-          onSelectConversation={onSelectConversation}/>
+          onSelectConversation={onSelectConversation}
+          user={foundUser}
+          socket={socket}/>
+
           <MessageComp 
             socket={socket}
             user={foundUser}
