@@ -90,7 +90,6 @@ export default function Page(){
  useEffect(() => {
   try{
     socket.on('successInitialMess', () => {
-      console.log('recived from socket');
       setTrigger(true);
     })
     setTimeout(() => {

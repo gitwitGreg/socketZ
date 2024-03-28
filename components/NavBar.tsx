@@ -3,11 +3,10 @@ import React, { useEffect, useState } from 'react'
 import Link from 'next/link'
 import Search from '@mui/icons-material/Search'
 import PersonIcon from '@mui/icons-material/Person';
-import Pin from '@mui/icons-material/pin';
+import PinIcon from '@mui/icons-material/Pin';
 import { useSession } from 'next-auth/react';
 import { setTimeout } from 'timers';
 import { Button } from './ui/button';
-import { signOut } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 
 
@@ -156,7 +155,7 @@ const NavBar = () => {
             <Button 
             className='bg-purple-600 flex gap-2'
             onClick={signOut}>
-                <Pin /> Sign Out
+                <PinIcon /> Sign Out
             </Button>
             <Link href={`/account/${user?.id}`}>
                 <PersonIcon />
