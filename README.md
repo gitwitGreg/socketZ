@@ -13,6 +13,20 @@ pnpm dev
 # or
 bun dev
 ```
+# Title
+socketZ
+
+# Description
+- This is complex chat application which users can send and recive messages in real time.
+- Users can have not only send private messages but they can also create group chats to have conversations with multiple users at once.
+- Users get to customize thier profile and display a profile picture and bio.
+
+# Why
+- After completing my social media application, I wanted to reinforce the skills I had learned and incorporate some new technologies. Creating a chat application was the perfect place to progress because it introduced me to web sockets. I enjoyed the process of building a full-stack application while trying to incorporate a web socket.
+  
+# Quick start
+- Install socketZ by downloading zip folder
+- Run in teminal with npm run dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
