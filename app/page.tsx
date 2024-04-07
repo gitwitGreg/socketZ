@@ -1,5 +1,5 @@
 import NavBar from "@/components/NavBar";
-import Page from "./messages/page";
+import Page from "./messages/messages";
 
 export default function Home() {
 

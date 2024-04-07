@@ -1,6 +1,6 @@
 'use client'
 import { useEffect, useMemo, useState } from "react";
-import Conversations from "../conversations/page"
+import Conversations from "../conversations/convos";
 import MessageComp from "./MessageComp"
 import { useSession } from "next-auth/react";
 import { io } from "socket.io-client"

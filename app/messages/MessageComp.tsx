@@ -1,8 +1,8 @@
 'use client'
 import React, { useEffect, useState } from "react"
-import PreviousMessages from "../PreviousMessages/page";
-import NewMessage from "../NewMessage/Page";
-import Welcome from "../Welcome/page";
+import PreviousMessages from "../PreviousMessages/PreviousMessages";
+import NewMessage from "../NewMessage/NewMessage";
+import Welcome from "../Welcome/Welcome";
 import { UserAccount } from "../ constants";
 
 export default function MessageComp({socket, user, selectedConvo}: {socket: any, user: UserAccount| undefined, selectedConvo: string | null}){

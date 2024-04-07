@@ -26,7 +26,7 @@ export async function POST(req: NextRequest, res: NextResponse){
        downloadStream.start()
 
        
-       const myResponse = new Response(downloadStream)
+       const myResponse = new Response(downloadStream as any)
 
        return myResponse;
 
