@@ -26,7 +26,7 @@ socketZ
   
 # Quick start
 - Install socketZ by downloading zip folder
-- Run in teminal with npm run dev
+- Run in terminal with npm run dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
